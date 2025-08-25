@@ -1,0 +1,50 @@
+{
+  "metrics": {
+    "test_loss": 84.34654998779297,
+    "mae": 9.108352661132812,
+    "rmse": 9.184038162231445,
+    "r2": -29.9812286095103,
+    "mean_relative_error": 19.59634780883789
+  },
+  "model_info": {
+    "model_type": "residual",
+    "polybert_dim": 600,
+    "material_dim": 2,
+    "material_features": [
+      "WaterContent",
+      "SwellingRate"
+    ],
+    "target_name": "Conductivity",
+    "dataset_path": "40C_dataset/raw/40C_dataset.xlsx",
+    "timestamp": "20250815_110839",
+    "dataset_split": {
+      "total_samples": 12,
+      "train_size": 10,
+      "test_size": 2
+    }
+  },
+  "training_config": {
+    "epochs": 20,
+    "batch_size": 2,
+    "learning_rate": 0.001,
+    "weight_decay": 1e-05,
+    "lr_step_size": 30,
+    "lr_gamma": 0.7
+  },
+  "predictions": [
+    56.331722259521484,
+    55.38498306274414
+  ],
+  "targets": [
+    48.400001525878906,
+    45.099998474121094
+  ],
+  "smiles": [
+    "[C@H]([C@@H]([C@@H](C=O)O)O)([C@@H](CO)O)O",
+    "C(=O)([C@H]1[C@@H]([C@@H]([C@@H]([C@@H](O)O1)O)O)O)O[Na]"
+  ],
+  "indices": [
+    7,
+    5
+  ]
+}
