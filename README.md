@@ -1,4 +1,4 @@
-# PolyNet: Data-driven Framework for Property Prediction of Polymer Systems (Molecular Sequence Semantic Representation Based on polyBERT)
+# PolyNet: Data-driven Framework for Property Prediction of Polymers
 
 ![Pipeline](polynet_pipeline.JPEG)
 
