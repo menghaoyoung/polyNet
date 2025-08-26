@@ -1,30 +1,30 @@
-# PolyNet: 高分子体系性质数据驱动预测框架 (基于 polyBERT 的分子序列语义表示)
+# PolyNet: Data-driven Framework for Property Prediction of Polymer Systems (Molecular Sequence Semantic Representation Based on polyBERT)
 
 ![Pipeline](polynet_pipeline.JPEG)
 
-## 摘要 (Abstract)
-PolyNet 面向高分子/水凝胶等软物质体系的结构–性质预测任务，结合预训练分子语言模型 polyBERT 的序列语义表示与实验可测宏观材料特征（含水率、溶胀率、聚合度、力学参数等），构建可扩展的融合回归体系。框架提供多种轻量模型头 (Light / Residual / Attention / Ensemble / CNN1D)，支持命令行训练与推理、批量预测及 Notebook 交互分析，适用于小样本到中等规模实验数据的快速建模和对比验证。
+## Abstract
+PolyNet is a structure–property prediction framework for soft-matter systems such as polymers and hydrogels. It combines sequence semantic representations from the pretrained molecular language model polyBERT with experimentally measurable macroscopic material features (water content, swelling ratio, degree of polymerization, mechanical parameters, etc.) to build an extensible fused regression system. The framework provides multiple lightweight model heads (Light / Residual / Attention / Ensemble / CNN1D), supports command-line training and inference, batch prediction, and interactive Notebook analysis. It is suitable for rapid modeling and comparative validation on small-to-moderate experimental datasets.
 
-## 1. 设计动机
-- 高分子材料结构多样且层级复杂，单纯基于经验或简单分子指纹难以充分表征。
-- 预训练分子 Transformer (polyBERT) 能捕获序列层面的语义与局部环境模式。
-- 实验材料特征（宏观/加工/形态/物性统计量）与分子级语义互补。
-- 通过特征融合 + 多种可插拔回归头，实现不同复杂度下的性能–泛化折中。
+## 1. Motivation
+- Polymer material structures are diverse and hierarchically complex; purely empirical rules or simple molecular fingerprints cannot fully represent them.
+- The pretrained molecular Transformer (polyBERT) can capture sequence-level semantics and local environment patterns.
+- Experimental material features (macroscopic / processing / morphology / physical-statistical metrics) are complementary to molecular-level semantics.
+- By feature fusion and multiple pluggable regression heads, the framework achieves performance–generalization trade-offs at different levels of complexity.
 
-## 2. 方法概述
-1. SMILES 编码：采用 `kuelumbus/polyBERT`，分词 → Transformer 前向 → mean pooling 得到固定维度向量。
-2. 材料特征处理：可选标准化（StandardScaler）。
-3. 融合机制：材料特征投影到统一融合维度，与压缩后的 polyBERT 表征交互（注意力 / 拼接 / 残差）。
-4. 模型头：
-   - Light：紧凑 MLP
-   - Residual：堆叠残差块
-   - Attention：自注意力 + 特征重要性加权
-   - Ensemble：多分支候选 + Softmax 权重聚合
-   - CNN1D：融合后向量视作一维序列，经卷积与池化提取局部模式
-5. 优化：均方误差 (MSE) 主损失，可报告 MAE / RMSE / R²。
-6. 保存：模型权重 (state_dict) 与特征缩放器（feature_scaler.pkl，若启用标准化），附配置与训练曲线文件。
+## 2. Method Overview
+1. SMILES encoding: use kuelumbus/polyBERT; tokenize → forward through Transformer → mean pooling to obtain a fixed-dimension vector.
+2. Material feature processing: optional standardization (StandardScaler).
+3. Fusion mechanism: project material features to a unified fusion dimension and interact them with the compressed polyBERT representation (attention / concatenation / residual).
+4. Model heads：
+   - Light：compact MLP
+   - Residual：stacked residual blocks
+   - Attention：self-attention + feature-importance weighting
+   - Ensemble：multi-branch candidates + Softmax-weighted aggregation
+   - CNN1D：treat the fused vector as a 1D sequence and extract local patterns via convolutions and pooling
+5. Optimization: mean squared error (MSE) as the primary loss; report MAE / RMSE / R².
+6. Saving: model weights (state_dict) and feature scaler (feature_scaler.pkl, if normalization is enabled), with configuration and training-curve files.
 
-## 3. 目录结构 (示例)
+## 3. Directory Structure
 ```
 polyNet/
   model_training.py
@@ -39,20 +39,20 @@ polyNet/
   README.md
 ```
 
-## 4. 环境安装
+## 4. Environment Setup
 ```bash
 python -m venv polyNet
 source venv/bin/activate  
 pip install -r requirements.txt
 ```
 
-## 5. 数据格式规范
-最少字段：
-- SMILES: 分子结构
-- 目标列: 如 Conductivity（可替换为所需物性：离子电导率、拉伸强度、介电常数等）
-- 材料特征: 任意数值列（例：WaterContent, SwellingRate, Degreeofpolymerization, ElongationatBreak, TensileStrength）
+## 5. Data Format
+Minimum required fields:
+- SMILES: molecular structure
+- Target column: e.g., Conductivity (can be replaced by any desired property: ionic conductivity, tensile strength, dielectric constant, etc.)
+- Material features: any numeric columns (examples: WaterContent, SwellingRate, Degreeofpolymerization, ElongationatBreak, TensileStrength)
 
-CSV/Excel 行示例：
+CSV/Excel row example:
 ```
 SMILES,WaterContent,SwellingRate,Degreeofpolymerization,ElongationatBreak,TensileStrength,Conductivity
 C=CO,87.5,146.4,1750,171.9,0.16,0.012
@@ -60,15 +60,15 @@ C(CO)O,90.0,143.9,100,209.3,0.16,0.018
 ```
 
 
-## 6. 训练命令行使用
-最小示例（仅结构 + 目标）：
+## 6. Training Command-line Usage
+Minimal example (structure + target only):
 ```bash
 python model_training.py \
   --data_path datasets/20C_dataset.xlsx \
   --target_col Conductivity
 ```
 
-完整示例：
+Full example:
 ```bash
 python model_training.py \
   --data_path datasets/20C_dataset.xlsx \
@@ -86,31 +86,31 @@ python model_training.py \
   --seed 42
 ```
 
-参数说明：
-| 参数 | 说明 |
+Parameter descriptions:
+| Parameter | Description |
 |------|------|
-| --data_path | 数据文件 (Excel/CSV) 路径 |
-| --target_col | 目标属性列名 |
-| --features | 逗号分隔材料数值特征列 |
+| --data_path | Path to data file (Excel/CSV) |
+| --target_col | Target property column name |
+| --features | Comma-separated material numeric feature columns |
 | --model_type | light / residual / attention / ensemble / cnn1d |
-| --epochs / --batch_size | 训练轮次 / 批大小 |
-| --lr / --weight_decay | 学习率 / L2 正则 |
-| --lr_step_size / --lr_gamma | 学习率调度 |
-| --test_size | <1 表示比例; ≥1 表示固定测试样本数 |
-| --no_normalize_features | 关闭材料特征标准化 |
-| --save_dir | 模型输出目录 |
-| --seed | 随机种子 |
+| --epochs / --batch_size | Training epochs / batch size |
+| --lr / --weight_decay | Learning rate / L2 regularization |
+| --lr_step_size / --lr_gamma | Learning rate scheduler |
+| --test_size | <1 means fraction; ≥1 means fixed number of test samples |
+| --no_normalize_features | Disable material feature standardization |
+| --save_dir | Model output directory |
+| --seed | Random seed |
 
 
-## 7. 推理与部署
-单条预测：
+## 7. Inference and Deployment
+Single prediction:
 ```bash
 python model_prediction.py \
   --model trained_models/attention_20C_run1/model.pth \
   --smiles "C(=O)(O)C=C"
 ```
 
-批量预测：
+Batch prediction:
 ```bash
 python model_prediction.py \
   --model trained_models/attention_20C_run1/model.pth \
@@ -119,12 +119,12 @@ python model_prediction.py \
   --output datasets/new_samples_predictions.csv
 ```
 
-交互模式（逐条输入）：
+Interactive mode (one-by-one input):
 ```bash
 python model_prediction.py -i
 ```
 
-Notebook 使用示例：
+Notebook usage example:
 ```python
 from model_prediction import ModelPredictor
 predictor = ModelPredictor("trained_models/attention_20C_run1/model.pth")
@@ -141,7 +141,7 @@ y = predictor.predict_single(
 print("Pred:", y)
 ```
 
-批量：
+Batch:
 ```python
 preds = predictor.predict_batch(
     smiles_list=["C=CO","C(CO)O"],
@@ -152,17 +152,17 @@ preds = predictor.predict_batch(
 )
 ```
 
-## 8. 模型结构细节
-| 组件 | 作用 |
+## 8. Model Architecture
+| Component | Role |
 |------|------|
-| polyBERT Encoder | 预训练序列表示，捕获原子序列语义与局部环境 |
-| Mean Pooling | Token 级表示 → 全局分子向量 |
-| Feature Projector | 材料特征映射到融合维度 (线性层堆叠 + 激活 + Dropout) |
-| Cross / Self Attention | 捕获多模态交互与内部相关性 |
-| Ensemble Branches | 多子模型输出加权求和，缓解单模型方差 |
-| CNN1D Head | 卷积抽取局部特征响应模式，提高非线性建模能力 |
+| polyBERT Encoder | Pretrained sequence representation that captures atom-sequence semantics and local environments |
+| Mean Pooling | Token-level representations → global molecular vector |
+| Feature Projector | Map material features to fusion dimension (stacked linear layers + activation + dropout) |
+| Cross / Self Attention | Capture multimodal interactions and internal correlations |
+| Ensemble Branches | Multiple sub-model outputs aggregated with weights to reduce single-model variance |
+| CNN1D Head | Convolutional extraction of local response patterns to improve nonlinear modeling capability |
 
-可扩展方向：多任务目标、图结构特征融合、对比学习微调、参数高效微调（LoRA / Adapter）。
+Possible extensions: multi-task objectives, graph-structure feature fusion, contrastive fine-tuning, parameter-efficient fine-tuning (LoRA / Adapters).
 
 
 
