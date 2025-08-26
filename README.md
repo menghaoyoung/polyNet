@@ -1,6 +1,6 @@
 # PolyNet: Data-driven Framework for Property Prediction of Polymers
 
-![Pipeline](polynet_pipeline.JPEG)
+<img width="955" height="295" alt="Screen Shot 2025-08-26 at 12 05 13" src="https://github.com/user-attachments/assets/08c2c626-c9d9-48b3-bc8d-d4131625f66e" />
 
 ## Abstract
 PolyNet is a structure–property prediction framework for soft-matter systems such as polymers and hydrogels. It combines sequence semantic representations from the pretrained molecular language model polyBERT with experimentally measurable macroscopic material features (water content, swelling ratio, degree of polymerization, mechanical parameters, etc.) to build an extensible fused regression system. The framework provides multiple lightweight model heads (Light / Residual / Attention / Ensemble / CNN1D), supports command-line training and inference, batch prediction, and interactive Notebook analysis. It is suitable for rapid modeling and comparative validation on small-to-moderate experimental datasets.
